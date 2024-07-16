@@ -1,0 +1,42 @@
+@import "./colors.css";
+
+:root {
+    --color-foreground: var(--color-gray-lightest);
+    --font-default: 'Tomorrow Night';
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+
+    color: var(--color-foreground);
+
+    background: linear-gradient(45deg,
+    var(--color-brown-darkest) 0%, var(--color-brown-darkest) 25%,
+    var(--color-brown-darker) 25%, var(--color-brown-darker) 50%,
+    var(--color-brown-dark) 50%, var(--color-brown-dark) 75%,
+    var(--color-brown-light) 75%, var(--color-brown-light) 100%);
+
+    font-family: var(--font-default), sans-serif;
+    font-size: 8px;
+}
+
+button {
+    background: transparent;
+    border: 2px solid var(--color-gray-light);
+    border-radius: 8px;
+    transition: border-color 100ms ease-in-out;
+    color: var(--color-gray-lighter);
+    padding: 0.5rem;
+    font: var(--font-default), sans-serif;
+
+    &:hover {
+        border-color: var(--color-gray-lighter);
+        cursor: pointer;
+    }
+}
+
+svg path {
+    width: 24px;
+    height: 24px;
+}

@@ -1,0 +1,56 @@
+/* color palette from https://lospec.com/palette-list/apollo */
+:root {
+    --color-blue-darkest: #172038;
+    --color-blue-darker: #253a5e;
+    --color-blue-dark: #3c5e8b;
+    --color-blue-light: #4f8fba;
+    --color-blue-lighter: #73bed3;
+    --color-blue-lightest: #a4dddb;
+
+    --color-green-darkest: #19332d;
+    --color-green-darker: #25562e;
+    --color-green-dark: #468232;
+    --color-green-light: #75a743;
+    --color-green-lighter: #a8ca58;
+    --color-green-lightest: #d0da91;
+
+    --color-light-brown-darkest: #4d2b32;
+    --color-light-brown-darker: #7a4841;
+    --color-light-brown-dark: #ad7757;
+    --color-light-brown-light: #c09473;
+    --color-light-brown-lighter: #d7b594;
+    --color-light-brown-lightest: #e7d5b3;
+
+    --color-brown-darkest: #341c27;
+    --color-brown-darker: #602c2c;
+    --color-brown-dark: #884b2b;
+    --color-brown-light: #be772b;
+    --color-brown-lighter: #de9e41;
+    --color-brown-lightest: #e8c170;
+
+    --color-red-darkest: #241527;
+    --color-red-darker: #411d31;
+    --color-red-dark: #752438;
+    --color-red-light: #a53030;
+    --color-red-lighter: #cf573c;
+    --color-red-lightest: #da863e;
+
+    --color-purple-darkest: #1e1d39;
+    --color-purple-darker: #402751;
+    --color-purple-dark: #7a367b;
+    --color-purple-light: #a23e8c;
+    --color-purple-lighter: #c65197;
+    --color-purple-lightest: #df84a5;
+
+    --color-blue-gray-darkest: #090a14;
+    --color-blue-gray-darker: #10141f;
+    --color-blue-gray-dark: #151d28;
+    --color-blue-gray-light: #202e37;
+    --color-blue-gray-lighter: #394a50;
+    --color-blue-gray-lightest: #577277;
+
+    --color-gray-dark: #819796;
+    --color-gray-light: #a8b5b2;
+    --color-gray-lighter: #c7cfcc;
+    --color-gray-lightest: #ebede9;
+}
