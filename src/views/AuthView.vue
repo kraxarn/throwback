@@ -1,42 +1,37 @@
 <script setup lang="ts">
 
 import {onMounted} from "vue";
-import {useRoute} from "vue-router";
-import {cipher} from "@/cipher";
-import client from "@/spotify/client.json"
+import {useRoute, useRouter} from "vue-router";
+import {supabase} from "@/supabaseClient";
 
 onMounted(async () => {
 	const route = useRoute()
+	const router = useRouter()
+
+	const userResponse = await supabase.auth.getUser()
+	if (userResponse.data.user && !userResponse.error) {
+		await router.push({
+			name: "playlists",
+		})
+	}
+
 	const code = route.query.code
-	if (!code) {
+	if (!code || typeof code !== "string") {
 		return
 	}
 
-	const headers = new Headers()
-	headers.set("Content-Type", "application/x-www-form-urlencoded")
-	headers.set("Authorization", "Basic " + btoa(cipher(client)
-		.map(code => String.fromCharCode(code))
-		.reduce<string[]>((v, c, i) => <string[]>((v[Math.floor(i / 32)] = (v[Math.floor(i / 32)] || "") + c) && v), [])
-		.join(":")))
+	const response = await supabase.auth.exchangeCodeForSession(code);
 
-	const request = new Request("https://accounts.spotify.com/api/token", {
-		method: "POST",
-		body: `grant_type=authorization_code&code=${code}&redirect_uri=${location.origin + location.pathname}`,
-		headers,
-	})
-
-	const response = await fetch(request)
-	const json = await response.json()
-
-	if (response.ok) {
-		localStorage.setItem("access_token", json.access_token)
-		localStorage.setItem("refresh_token", json.refresh_token)
-		localStorage.setItem("expire_token", (Date.now() + json.expires_in * 1000).toString())
-	} else {
+	if (response.error) {
 		const text = document.querySelector("h3")
 		if (text) {
-			text.innerText = `Error: ${json.error_description} (${json.error})`
+			const error = response.error
+			text.innerText = `Error: ${error.message} (${error.code})`
 		}
+	} else {
+		await router.push({
+			name: "playlists",
+		})
 	}
 })
 

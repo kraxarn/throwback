@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {cipher} from "@/cipher";
-import client from "@/spotify/client.json"
+import {supabase} from "@/supabaseClient";
 
-const signIn = () => {
+const signInSpotify = async () => {
 	const scopes = [
 		// For showing currently playing music
 		"user-read-currently-playing",
@@ -16,18 +15,20 @@ const signIn = () => {
 		"streaming",
 		// Check for Spotify Premium
 		"user-read-private",
-		// "user-read-email",
+		"user-read-email",
 	]
 
-	const url = new URL("https://accounts.spotify.com/authorize")
-	url.searchParams.set("response_type", "code")
-	url.searchParams.set("scope", scopes.join(" "))
-	url.searchParams.set("redirect_uri", `${location.origin}/auth`)
+	const response = await supabase.auth.signInWithOAuth({
+		provider: "spotify",
+		options: {
+			scopes: scopes.join(" "),
+			redirectTo: `${location.origin}/auth`,
+		},
+	})
 
-	url.searchParams.set("client_id", cipher(client.slice(0, client.length / 2))
-		.reduce((value, current) => value + String.fromCharCode(current), ""))
-
-	location.href = url.href
+	if (response.error) {
+		alert(response.error.message)
+	}
 }
 
 </script>
@@ -35,13 +36,10 @@ const signIn = () => {
 <template>
     <main>
         <h1>Welcome!</h1>
+        <p>Before continuing, please sign in to Spotify</p>
 
-        <p>
-            Before continuing, please sign in to Spotify
-        </p>
-
-        <button @click="signIn">
-            Sign in to Spotify
+        <button @click="signInSpotify">
+            Sign in with Spotify
         </button>
     </main>
 </template>
