@@ -22,15 +22,15 @@ body {
 
 button {
     background: transparent;
-    border: 2px solid var(--color-gray-light);
+    border: 2px solid var(--color-gray-lighter);
     border-radius: 8px;
     transition: border-color 100ms ease-in-out;
-    color: var(--color-gray-lighter);
+    color: var(--color-gray-lightest);
     padding: 0.5rem;
     font: var(--font-default), sans-serif;
 
     &:hover {
-        border-color: var(--color-gray-lighter);
+        border-color: var(--color-gray-lightest);
         cursor: pointer;
     }
 }
