@@ -50,7 +50,7 @@ onMounted(() => {
 .tile {
     width: 150px;
     height: 220px;
-    border: 1px solid var(--color-blue-dark);
+    border: 1px solid var(--color-purple-dark);
     cursor: pointer;
 
     display: flex;
@@ -75,8 +75,8 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    background-color: var(--color-light-brown-lightest);
-    color: var(--color-light-brown-darkest);
+    background-color: var(--color-purple-darker);
+    color: var(--color-purple-lightest);
 }
 
 </style>

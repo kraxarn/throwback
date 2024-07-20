@@ -79,8 +79,9 @@ h4 {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--color-light-brown-dark);
-    border: 6px solid var(--color-light-brown-darker);
+    background-color: var(--color-purple-darker);
+    border: 6px solid var(--color-purple-dark);
+    color: var(--color-purple-lightest);
     display: flex;
     flex-direction: column;
     border-radius: 32px;
@@ -106,7 +107,7 @@ h4 {
 
     p {
         flex: 1;
-        color: var(--color-gray-lighter);
+        color: var(--color-purple-lighter);
     }
 }
 
