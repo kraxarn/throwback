@@ -11,6 +11,10 @@ const props = defineProps<{
 	spotifyApi: SpotifyApi,
 }>()
 
+defineEmits<{
+	activated: [playlist: Playlist];
+}>()
+
 onMounted(async () => {
 	const api = props.spotifyApi
 	if (!api || !props.playlistId) {
@@ -33,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="tile" v-if="playlist">
+    <div class="tile" v-if="playlist" @click="$emit('activated', playlist)">
         <img v-if="playlist" :src="playlist.images[0].url" :alt="playlist.name"/>
         <div class="title-container">
             <p>{{ playlist.name }}</p>

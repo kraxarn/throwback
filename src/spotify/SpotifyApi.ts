@@ -66,6 +66,7 @@ export class SpotifyApi {
 			"images",
 			"name",
 			"owner(display_name)",
+			"tracks(total)",
 		].join(","))
 
 		return this.get<Playlist>(`playlists/${playlistId}`, params)
@@ -119,6 +120,9 @@ export interface Playlist {
 	owner: {
 		id: string;
 		display_name: string;
+	};
+	tracks: {
+		total: number;
 	};
 }
 
