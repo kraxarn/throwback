@@ -42,12 +42,6 @@ export class SpotifyApi {
 		return this.request<T>("GET", fullPath)
 	}
 
-	private post<T>(path: string, body?: BodyInit): Promise<T> {
-		return this.request<T>("POST", path, {
-			body,
-		})
-	}
-
 	private async refresh(): Promise<void> {
 		const body = new URLSearchParams()
 		body.set("grant_type", "refresh_token")
