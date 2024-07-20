@@ -13,7 +13,7 @@ body {
 
     background: linear-gradient(45deg,
     var(--color-brown-darkest) 0%,
-    var(--color-brown-darker) 50%,
+    var(--color-brown-darker) 75%,
     var(--color-brown-dark) 100%);
 
     font-family: var(--font-default), sans-serif;
