@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {supabase} from "@/supabaseClient";
+import SpotifyIcon from "@/components/icons/SpotifyIcon.vue";
 
 const signInSpotify = async () => {
 	const scopes = [
@@ -39,7 +40,18 @@ const signInSpotify = async () => {
         <p>Before continuing, please sign in to Spotify</p>
 
         <button @click="signInSpotify">
+            <SpotifyIcon/>
             Sign in with Spotify
         </button>
     </main>
 </template>
+
+<style scoped>
+
+button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+</style>
