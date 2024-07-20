@@ -33,7 +33,7 @@ const formatDescription = (): string => {
         <h4>{{ formatDescription() }}</h4>
 
         <div class="button-container">
-            <p>
+            <p v-if="playlist.tracks.total > 0">
                 {{ playlist.tracks.total }}
                 {{ playlist.tracks.total === 1 ? "track" : "tracks" }}
             </p>
@@ -100,6 +100,7 @@ h4 {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
     column-gap: 1rem;
     margin-top: 2rem;
 
