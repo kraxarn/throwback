@@ -88,10 +88,41 @@ const onDialogDeactivated = () => {
                       @activated="onItemActivated"/>
     </PlaylistCarousel>
 
-    <DialogBackdrop v-if="currentPlaylist" @dismissed="onDialogDeactivated"/>
+    <Transition name="dialog-backdrop">
+        <DialogBackdrop v-if="currentPlaylist" @dismissed="onDialogDeactivated"/>
+    </Transition>
 
-    <PlaylistDialog v-if="currentPlaylist" :playlist="currentPlaylist"
-                    @activated="onDialogActivated" @deactivated="onDialogDeactivated"/>
+    <Transition name="dialog-content">
+        <PlaylistDialog v-if="currentPlaylist" :playlist="currentPlaylist"
+                        @activated="onDialogActivated" @deactivated="onDialogDeactivated"/>
+    </Transition>
 
     <!--    <PlaylistTitle title="Custom" description="Search for a custom playlist"/>-->
 </template>
+
+<style scoped>
+
+.dialog-backdrop-enter-active, .dialog-backdrop-leave-active,
+.dialog-content-enter-active, .dialog-content-leave-active {
+    transition-timing-function: ease;
+    transition-duration: 0.3s;
+}
+
+.dialog-backdrop-enter-active, .dialog-backdrop-leave-active {
+    transition-property: opacity;
+}
+
+.dialog-content-enter-active, .dialog-content-leave-active {
+    transition-property: top, transform;
+}
+
+.dialog-backdrop-enter-from, .dialog-backdrop-leave-to {
+    opacity: 0;
+}
+
+.dialog-content-enter-from, .dialog-content-leave-to {
+    top: 100%;
+    transform: translate(-50%, 100%);
+}
+
+</style>
