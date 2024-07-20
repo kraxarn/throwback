@@ -92,11 +92,3 @@ const onDialogDeactivated = () => {
 
     <!--    <PlaylistTitle title="Custom" description="Search for a custom playlist"/>-->
 </template>
-
-<style>
-
-#app {
-    padding: 0;
-}
-
-</style>

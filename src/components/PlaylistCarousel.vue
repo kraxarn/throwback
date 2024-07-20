@@ -15,6 +15,11 @@
     column-gap: 1rem;
     overflow-x: auto;
     min-height: 200px;
+
+    /* Ignore app padding */
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding-left: 2rem;
 }
 
 </style>
