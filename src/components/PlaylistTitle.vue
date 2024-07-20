@@ -16,15 +16,18 @@ const props = defineProps([
 
 h1 {
     margin-top: 2rem;
+    margin-left: 1rem;
     margin-bottom: 0;
 
     &:first-child {
-        margin-top: 0;
+        margin-top: 1rem;
     }
 }
 
 h3 {
     margin-top: 0;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 </style>
