@@ -7,6 +7,7 @@ import {onMounted, ref} from "vue";
 import {supabase} from "@/supabaseClient";
 import {type Playlist, SpotifyApi} from "@/spotify/SpotifyApi";
 import PlaylistDialog from "@/components/PlaylistDialog.vue";
+import DialogBackdrop from "@/components/DialogBackdrop.vue";
 
 const spotifyApi = ref<SpotifyApi>()
 
@@ -86,6 +87,8 @@ const onDialogDeactivated = () => {
         <PlaylistTile v-for="playlist in userPlaylists" :playlist="playlist" :spotify-api="spotifyApi"
                       @activated="onItemActivated"/>
     </PlaylistCarousel>
+
+    <DialogBackdrop v-if="currentPlaylist" @dismissed="onDialogDeactivated"/>
 
     <PlaylistDialog v-if="currentPlaylist" :playlist="currentPlaylist"
                     @activated="onDialogActivated" @deactivated="onDialogDeactivated"/>

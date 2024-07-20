@@ -21,9 +21,6 @@ const formatDescription = (): string => {
 </script>
 
 <template>
-    <div class="backdrop" @click="$emit('deactivated')">
-    </div>
-
     <div class="container">
         <div class="image-container">
             <img :src="playlist.images[0].url" :alt="playlist.name"/>
@@ -63,15 +60,6 @@ img {
 
 h4 {
     max-width: 25rem;
-}
-
-.backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(2px) brightness(60%);
 }
 
 .container {
