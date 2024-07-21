@@ -28,21 +28,14 @@ onMounted(async () => {
 	const api = new SpotifyApi(session)
 	spotifyApi.value = api
 
-	api.featuredPlaylists().then(value => {
-		featuredPlaylists.value = value.playlists.items
-	})
+	featuredPlaylists.value = (await api.featuredPlaylists()).playlists.items
 
-	api.search("Mix").then(value => {
+	forYouPlaylists.value = (await api.search("Mix")).playlists.items
+		.filter(playlist => playlist.owner.id === "spotify")
+		.filter(playlist => !playlist.name.startsWith("Daily Mix"))
+		.slice(0, 20)
 
-		forYouPlaylists.value = value.playlists.items
-			.filter(playlist => playlist.owner.id === "spotify")
-			.filter(playlist => !playlist.name.startsWith("Daily Mix"))
-			.slice(0, 20)
-	})
-
-	api.playlists().then(value => {
-		userPlaylists.value = value.items
-	})
+	userPlaylists.value = (await api.playlists()).items
 })
 
 const onItemActivated = (playlist: Playlist) => {
