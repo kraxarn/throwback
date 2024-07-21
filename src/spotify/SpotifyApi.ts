@@ -1,17 +1,35 @@
-import type {Session} from "@supabase/supabase-js";
-
 export class SpotifyApi {
-	private readonly session: Session
+	constructor(session: {
+		provider_token?: string | null
+		provider_refresh_token?: string | null
+	}) {
+		if (session.provider_token && session.provider_refresh_token) {
+			this.accessToken = session.provider_token
+			this.refreshToken = session.provider_refresh_token
+		}
+	}
 
-	constructor(session: Session) {
-		this.session = session
+	private get accessToken(): string {
+		return localStorage.getItem("spotify_access_token") || ""
+	}
+
+	private set accessToken(accessToken: string) {
+		localStorage.setItem("spotify_access_token", accessToken)
+	}
+
+	private get refreshToken(): string {
+		return localStorage.getItem("spotify_refresh_token") || ""
+	}
+
+	private set refreshToken(refreshToken: string) {
+		localStorage.setItem("spotify_refresh_token", refreshToken)
 	}
 
 	private async request<T>(method: string, path: string, options?: RequestOptions): Promise<T> {
 		const url = new URL(path, "https://api.spotify.com/v1/")
 
 		const headers = new Headers(options?.headers)
-		headers.set("Authorization", `Bearer ${this.session.provider_token}`)
+		headers.set("Authorization", `Bearer ${this.accessToken}`)
 
 		const response = await fetch(url, {
 			method,
@@ -45,7 +63,7 @@ export class SpotifyApi {
 	private async refresh(): Promise<void> {
 		const body = new URLSearchParams()
 		body.set("grant_type", "refresh_token")
-		body.set("refresh_token", this.session.provider_refresh_token || "")
+		body.set("refresh_token", this.refreshToken)
 
 		const url = "https://accounts.spotify.com/api/token"
 		const token = await this.request<Token>("POST", url, {
@@ -55,8 +73,8 @@ export class SpotifyApi {
 			body,
 		})
 
-		this.session.provider_token = token.access_token
-		this.session.provider_refresh_token = token.refresh_token
+		this.accessToken = token.access_token
+		this.refreshToken = token.refresh_token
 	}
 
 	public async getPlaylist(playlistId: string): Promise<Playlist> {
