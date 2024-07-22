@@ -109,7 +109,7 @@ export class SpotifyApi {
 
 	public async playlists(): Promise<Page<Playlist>> {
 		const params = new URLSearchParams()
-		params.set("limit", "20")
+		params.set("limit", "50")
 
 		return this.get<Page<Playlist>>("me/playlists", params)
 	}
