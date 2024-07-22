@@ -113,6 +113,21 @@ export class SpotifyApi {
 
 		return this.get<Page<Playlist>>("me/playlists", params)
 	}
+
+	public async* playlistTracks(playlist: Playlist): AsyncGenerator<Track> {
+		const params = new URLSearchParams()
+		params.set("limit", "50")
+
+		for (let i = 0; i < playlist.tracks.total; i += 50) {
+			params.set("offset", i.toString())
+			const url = `playlists/${playlist.id}/tracks`
+			const page = await this.get<Page<PlaylistTrack>>(url, params)
+
+			for (const playlistTrack of page.items) {
+				yield playlistTrack.track
+			}
+		}
+	}
 }
 
 interface RequestOptions {
@@ -144,6 +159,25 @@ export interface Playlist {
 	tracks: {
 		total: number;
 	};
+}
+
+interface PlaylistTrack {
+	track: Track
+}
+
+export interface Track {
+	album: {
+		id: string
+		name: string
+		release_date: string
+	}
+	artists: [{
+		id: string
+		name: string
+	}]
+	id: string
+	name: string
+	duration_ms: number
 }
 
 interface Page<T> {
