@@ -19,19 +19,31 @@ body {
     font-family: var(--font-default), sans-serif;
 }
 
-button {
+button, input[type="text"] {
     background: transparent;
-    border: 2px solid var(--color-gray-lighter);
-    border-radius: 8px;
-    transition: border-color 100ms ease-in-out;
     color: var(--color-gray-lightest);
-    padding: 0.5rem;
+    border: 2px solid var(--color-gray-lighter);
     font: var(--font-default), sans-serif;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
 
-    &:hover {
+button {
+    transition: border-color 100ms ease-in-out;
+
+    &:hover:not(:disabled) {
         border-color: var(--color-gray-lightest);
         cursor: pointer;
     }
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}
+
+input[type="text"] {
+    box-sizing: border-box;
+    font-size: 0.9em;
 }
 
 svg path {
