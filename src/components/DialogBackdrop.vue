@@ -19,6 +19,7 @@ defineEmits<{
     width: 100%;
     height: 100%;
     backdrop-filter: blur(2px) brightness(50%);
+    -webkit-backdrop-filter: blur(2px) brightness(50%);
 }
 
 </style>
