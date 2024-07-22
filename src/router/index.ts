@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from "@/views/AuthView.vue";
 import PlaylistsView from "@/views/PlaylistsView.vue";
+import LobbyView from "@/views/LobbyView.vue";
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -20,6 +21,11 @@ const router = createRouter({
 			path: "/playlists",
 			name: "playlists",
 			component: PlaylistsView,
+		},
+		{
+			path: "/lobby/:id",
+			name: "lobby",
+			component: LobbyView,
 		},
 	],
 })
