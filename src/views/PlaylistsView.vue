@@ -8,6 +8,7 @@ import {supabase} from "@/supabaseClient";
 import {type Playlist, SpotifyApi} from "@/spotify/SpotifyApi";
 import PlaylistDialog from "@/components/PlaylistDialog.vue";
 import DialogBackdrop from "@/components/DialogBackdrop.vue";
+import {useRouter} from "vue-router";
 
 const spotifyApi = ref<SpotifyApi>()
 
@@ -16,6 +17,8 @@ const forYouPlaylists = ref<Playlist[]>()
 const userPlaylists = ref<Playlist[]>()
 
 const currentPlaylist = ref<Playlist>()
+
+const router = useRouter()
 
 onMounted(async () => {
 	const sessionResponse = await supabase.auth.getSession()
@@ -43,7 +46,12 @@ const onItemActivated = (playlist: Playlist) => {
 }
 
 const onDialogActivated = (playlist: Playlist) => {
-	currentPlaylist.value = undefined
+	router.push({
+		name: "lobby",
+		params: {
+			id: playlist.id,
+		},
+	})
 }
 
 const onDialogDeactivated = () => {

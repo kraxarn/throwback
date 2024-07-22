@@ -82,6 +82,7 @@ export class SpotifyApi {
 		params.set("fields", [
 			"description",
 			"images",
+			"id",
 			"name",
 			"owner(display_name)",
 			"tracks(total)",
@@ -134,6 +135,7 @@ export interface Playlist {
 		height: number;
 		width: number;
 	}[];
+	id: string;
 	name: string;
 	owner: {
 		id: string;
