@@ -171,6 +171,8 @@ const onAddPlayer = () => {
         </p>
     </div>
 
+    <h2>Game settings</h2>
+
     <h3>Players</h3>
     <div id="player-container" v-if="players.length > 0">
         <Player v-for="player in players" :player="player"/>
@@ -194,8 +196,12 @@ const onAddPlayer = () => {
 
 <style scoped>
 
-h2, h3 {
+h2 {
     margin-top: 4rem;
+}
+
+h3 {
+    margin-top: 2rem;
 }
 
 #error {
