@@ -14,7 +14,9 @@ jobs:
       - name: Prepare Keys
         env:
           SUPABASE_PUBLIC: ${{ secrets.SUPABASE_PUBLIC }}
-        run: echo "$SUPABASE_PUBLIC" > "${{runner.workspace}}/throwback/src/supabase/public.json"
+        run: |
+          mkdir "src/supabase"
+          echo "$SUPABASE_PUBLIC" > "src/supabase/public.json"
 
       - name: Download Dependencies
         run: yarn install
