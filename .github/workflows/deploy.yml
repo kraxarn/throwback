@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare Keys
+        env:
+          SUPABASE_PUBLIC: ${{ secrets.SUPABASE_PUBLIC }}
+        run: echo "$SUPABASE_PUBLIC" > "src/supabase/public.json"
+
+      - name: Download Dependencies
+        run: yarn install
+
+      - name: Build
+        run: vite build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: 'dist'
