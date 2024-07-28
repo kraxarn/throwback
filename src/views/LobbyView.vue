@@ -129,6 +129,12 @@ const onCancel = () => {
 }
 
 const onContinue = () => {
+	router.push({
+		name: "game",
+		params: {
+			id: playlist.value?.id,
+		},
+	})
 }
 
 const onAddPlayer = () => {
