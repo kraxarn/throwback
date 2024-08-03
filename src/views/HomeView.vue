@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {supabase} from "@/supabaseClient";
 import SpotifyIcon from "@/components/icons/SpotifyIcon.vue";
+import AppVersion from "@/components/AppVersion.vue";
 
 const signInSpotify = async () => {
 	const scopes = [
@@ -43,6 +44,8 @@ const signInSpotify = async () => {
             <SpotifyIcon/>
             Sign in with Spotify
         </button>
+
+        <AppVersion/>
     </main>
 </template>
 
