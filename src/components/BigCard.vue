@@ -1,5 +1,8 @@
 <script setup lang="ts">
 
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {faMusic, faUser} from "@fortawesome/free-solid-svg-icons";
+
 defineProps<{
 	year: number
 	artist: string
@@ -10,10 +13,10 @@ defineProps<{
 
 <template>
     <div class="big-card-container">
-        <div></div>
         <span class="year">{{ year }}</span>
-        <div></div>
+        <FontAwesomeIcon :icon="faMusic"/>
         <span class="track">{{ track }}</span>
+        <FontAwesomeIcon :icon="faUser"/>
         <span class="artist">{{ artist }}</span>
         <div></div>
     </div>
@@ -26,12 +29,13 @@ defineProps<{
     border: 4px solid var(--color-purple-light);
     color: var(--color-purple-lightest);
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 6fr repeat(2, auto) 1fr;
     align-items: center;
-    justify-content: space-around;
-    overflow: hidden;
+    padding: 0.6rem;
 
+    overflow: hidden;
     width: 7rem;
     height: 10rem;
     border-radius: 8px;
@@ -40,8 +44,15 @@ defineProps<{
         flex: 1;
     }
 
+    span {
+        padding: 0.5rem;
+    }
+
     span.year {
         font-size: 1.8em;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        justify-self: center;
     }
 }
 
