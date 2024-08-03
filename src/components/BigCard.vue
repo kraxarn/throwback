@@ -18,7 +18,6 @@ defineProps<{
         <span class="track">{{ track }}</span>
         <FontAwesomeIcon :icon="faUser"/>
         <span class="artist">{{ artist }}</span>
-        <div></div>
     </div>
 </template>
 
@@ -31,9 +30,10 @@ defineProps<{
 
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: 6fr repeat(2, auto) 1fr;
+    grid-template-rows: 3fr repeat(2, 2fr);
     align-items: center;
     padding: 0.6rem;
+    row-gap: 0.5rem;
 
     overflow: hidden;
     width: 7rem;
@@ -46,6 +46,8 @@ defineProps<{
 
     span {
         padding: 0.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     span.year {
