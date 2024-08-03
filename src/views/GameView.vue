@@ -12,6 +12,8 @@ import {GameApi} from "@/supabase/GameApi";
 import {useRoute} from "vue-router";
 import type {Player} from "@/game/Player";
 import {getPosition, type Position} from "@/game/Position";
+import type {RealtimePostgresInsertPayload} from "@supabase/supabase-js";
+import type {Round} from "@/game/Round";
 
 const api = new GameApi()
 let spotify: SpotifyApi
@@ -55,6 +57,15 @@ onMounted(async () => {
 
 	await play()
 	await refresh()
+
+	supabase
+		.channel("supabase_realtime")
+		.on("postgres_changes", {
+			event: "INSERT",
+			schema: "public",
+			table: "rounds"
+		}, onRoundInsert)
+		.subscribe()
 })
 
 const nextCardIndex = async (): Promise<number> => {
@@ -137,7 +148,24 @@ const guess = async (index: number) => {
 		correct = beforeYear >= trackYear
 	}
 
-	if (correct) {
+	await api.insertRound(matchId,
+		currentPlayer.value,
+		currentTrackIndex.value,
+		correct
+	)
+}
+
+const onRoundInsert = async (payload: RealtimePostgresInsertPayload<Round>) => {
+	const round = payload.new
+
+	if (round.match_id !== matchId) {
+		return
+	}
+
+	if (round.success) {
+		const playerCards = players.value[currentPlayer.value].cards
+		const track = await spotify.playlistTrack(playlist, round.track_index)
+
 		playerCards.push(track)
 		playerCards.sort((card1, card2) => {
 			const date1 = new Date(card1.album.release_date)
@@ -152,12 +180,6 @@ const guess = async (index: number) => {
 			}
 		})
 	}
-
-	await api.insertRound(matchId,
-		currentPlayer.value,
-		currentTrackIndex.value,
-		correct
-	)
 
 	currentPlayer.value = (currentPlayer.value + 1) % players.value.length
 	currentPosition.value = getPosition(players.value.length, currentPlayer.value)
