@@ -30,6 +30,7 @@ const currentPosition = ref<Position>("bottom")
 const progressMs = ref<number>(0)
 const durationMs = ref<number>(0)
 const isPlaying = ref<boolean>(false)
+const isGuessing = ref<boolean>(false)
 
 onMounted(async () => {
 	const route = useRoute()
@@ -148,6 +149,8 @@ const guess = async (index: number) => {
 		correct = beforeYear >= trackYear
 	}
 
+	isGuessing.value = true
+
 	await api.insertRound(matchId,
 		currentPlayer.value,
 		currentTrackIndex.value,
@@ -185,6 +188,7 @@ const onRoundInsert = async (payload: RealtimePostgresInsertPayload<Round>) => {
 	currentPosition.value = getPosition(players.value.length, currentPlayer.value)
 
 	await play()
+	isGuessing.value = false
 }
 
 </script>
@@ -202,13 +206,13 @@ const onRoundInsert = async (payload: RealtimePostgresInsertPayload<Round>) => {
         <template v-for="(player, playerIndex) in players">
             <div :id="player.position" class="hand">
                 <template v-if="playerIndex === currentPlayer" v-for="(card, cardIndex) in player.cards">
-                    <InsertCard :index="cardIndex+1" v-if="cardIndex === 0" @click="guess(0)"/>
+                    <InsertCard :index="cardIndex+1" v-if="cardIndex === 0 && !isGuessing" @click="guess(0)"/>
 
                     <BigCard :year="getAlbumYear(card)"
                              :artist="getArtistNames(card)"
                              :track="card.name"/>
 
-                    <InsertCard :index="cardIndex+2" @click="guess(cardIndex+1)"/>
+                    <InsertCard :index="cardIndex+2" v-if="!isGuessing" @click="guess(cardIndex+1)"/>
                 </template>
 
                 <template v-else v-for="card in player.cards">
