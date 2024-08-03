@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import {name, version} from "@/../package.json"
+import {homepage, name, version} from "@/../package.json"
 
 const appName: string = name
 const appVersion: string = version
+const appHomepage: string = homepage
 </script>
 
 <template>
-    <span id="app-version">
+    <a id="app-version" :href="appHomepage">
         {{ appName }} v{{ appVersion }}
-    </span>
+    </a>
 </template>
 
 <style scoped>

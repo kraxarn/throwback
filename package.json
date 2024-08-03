@@ -1,6 +1,7 @@
 {
   "name": "throwback",
-  "version": "1.4.1",
+  "version": "1.4.2",
+  "homepage": "https://github.com/kraxarn/throwback",
   "private": true,
   "type": "module",
   "scripts": {
