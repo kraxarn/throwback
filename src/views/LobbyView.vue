@@ -24,6 +24,7 @@ import SonicIcon from "@/components/icons/avatars/SonicIcon.vue";
 import SpyroIcon from "@/components/icons/avatars/SpyroIcon.vue";
 import TailsIcon from "@/components/icons/avatars/TailsIcon.vue";
 import TotoroIcon from "@/components/icons/avatars/TotoroIcon.vue";
+import {GameApi} from "@/supabase/GameApi";
 
 const errorMessage = ref<string>()
 
@@ -34,6 +35,7 @@ const loadingTracks = ref<boolean>(true)
 const totalTime = ref<string>("0m")
 const fromYear = ref<number>(0)
 const toYear = ref<number>(0)
+const creatingGame = ref<boolean>(false)
 
 const avatars: Component[] = [
 	BenderIcon,
@@ -128,11 +130,21 @@ const onCancel = () => {
 	router.go(-1)
 }
 
-const onContinue = () => {
-	router.push({
+const onContinue = async () => {
+	creatingGame.value = true
+
+	const playlistId = playlist.value?.id
+	if (!playlistId) {
+		return
+	}
+
+	const api = new GameApi()
+	const matchId = await api.createMatch(playlistId, players.value.length)
+
+	await router.push({
 		name: "game",
 		params: {
-			id: playlist.value?.id,
+			id: matchId,
 		},
 	})
 }
@@ -190,12 +202,12 @@ const onAddPlayer = () => {
     <h2 v-if="playlist">Sounds good?</h2>
 
     <div id="button-container" v-if="playlist">
-        <button @click="onCancel">
+        <button :disabled="creatingGame" @click="onCancel">
             Nah, go back
         </button>
 
-        <button :disabled="loadingTracks" @click="onContinue">
-            Yeah!
+        <button :disabled="loadingTracks || creatingGame" @click="onContinue">
+            {{ creatingGame ? "Hold on..." : "Yeah!" }}
         </button>
     </div>
 </template>
