@@ -4,7 +4,158 @@ import SmallCard from "@/components/SmallCard.vue";
 import BigCard from "@/components/BigCard.vue";
 import InsertCard from "@/components/InsertCard.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faPause} from "@fortawesome/free-solid-svg-icons";
+import {faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {onMounted, ref} from "vue";
+import {type Playlist, SpotifyApi, type Track} from "@/spotify/SpotifyApi";
+import {supabase} from "@/supabaseClient";
+import {GameApi} from "@/supabase/GameApi";
+import {useRoute} from "vue-router";
+import type {Player} from "@/game/Player";
+import {getPosition} from "@/game/Position";
+
+const api = new GameApi()
+let spotify: SpotifyApi
+
+let trackCount = 0
+let matchId = ""
+let playlist: Playlist
+
+const players = ref<Player[]>([])
+const currentPlayer = ref<number>(0)
+const currentTrackIndex = ref<number>()
+
+const progressMs = ref<number>(0)
+const durationMs = ref<number>(0)
+const isPlaying = ref<boolean>(false)
+
+onMounted(async () => {
+	const route = useRoute()
+	matchId = <string>route.params.id
+
+	const sessionResponse = await supabase.auth.getSession()
+	const session = sessionResponse?.data.session
+	if (!session) {
+		return
+	}
+
+	spotify = new SpotifyApi(session)
+	const playlistId = await api.getPlaylistId(matchId)
+	playlist = await spotify.getPlaylist(playlistId)
+	trackCount = playlist.tracks.total
+
+	const playerCount = await api.getPlayerCount(matchId)
+	for (let i = 0; i < playerCount; i++) {
+		players.value?.push({
+			position: getPosition(playerCount, i),
+			cards: [],
+		})
+		await drawCard(i)
+	}
+
+	await play()
+	await refresh()
+})
+
+const nextCardIndex = async (): Promise<number> => {
+	let trackIndex = Math.floor(Math.random() * trackCount);
+	let ok = false;
+
+	while (!ok) {
+		trackIndex = (trackIndex + 1) % trackCount
+		ok = !(await api.isTrackIndexUsed(matchId, trackIndex))
+	}
+
+	return trackIndex
+}
+
+const drawCard = async (playerIndex: number): Promise<void> => {
+	const trackIndex = await nextCardIndex()
+	const track = await spotify.playlistTrack(playlist, trackIndex)
+	players.value[playerIndex].cards.push(track)
+}
+
+const getArtistNames = (track: Track): string => {
+	return track.artists
+		.map(artist => artist.name)
+		.join(", ")
+}
+
+const getAlbumYear = (track: Track): number => {
+	const date = new Date(track.album.release_date)
+	return date.getFullYear()
+}
+
+const formatTime = (ms: number): string => {
+	const seconds = Math.floor(ms / 1000) % 60
+	const minutes = Math.floor(ms / 1000 / 60)
+
+	return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
+}
+
+const refresh = async () => {
+	const state = await spotify.playbackState()
+	progressMs.value = state.progress_ms
+	durationMs.value = state.item.duration_ms
+	isPlaying.value = state.is_playing
+
+	setTimeout(() => refresh(), 1000)
+}
+
+const play = async () => {
+	const contextUri = `spotify:playlist:${playlist.id}`
+	const offset = await nextCardIndex()
+	await spotify.play(contextUri, offset)
+	currentTrackIndex.value = offset
+}
+
+const guess = async (index: number) => {
+	if (!currentTrackIndex.value) {
+		console.warn("no current track index")
+		return
+	}
+
+	const track = await spotify.playlistTrack(playlist, currentTrackIndex.value)
+	const trackDate = new Date(track.album.release_date)
+	const trackYear = trackDate.getFullYear()
+
+	const playerCards = players.value[currentPlayer.value].cards
+	const afterCard = playerCards[index - 1]
+	const beforeCard = playerCards[index]
+
+	let correct = true
+
+	if (afterCard) {
+		const afterDate = new Date(afterCard.album.release_date)
+		const afterYear = afterDate.getFullYear()
+		correct = afterYear <= trackYear
+	}
+
+	if (correct && beforeCard) {
+		const beforeDate = new Date(beforeCard.album.release_date)
+		const beforeYear = beforeDate.getFullYear()
+		correct = beforeYear >= trackYear
+	}
+
+	if (correct) {
+		playerCards.push(track)
+		playerCards.sort((card1, card2) => {
+			const date1 = new Date(card1.album.release_date)
+			const date2 = new Date(card2.album.release_date)
+
+			if (date1 > date2) {
+				return 1
+			} else if (date1 < date2) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	}
+
+	currentPlayer.value = (currentPlayer.value + 1) % players.value.length
+	await play()
+}
+
 </script>
 
 <template>
@@ -12,39 +163,28 @@ import {faPause} from "@fortawesome/free-solid-svg-icons";
         <div id="indicator"></div>
         <div id="dashboard">
             <span>
-                0:00 / 0:00
+                {{ formatTime(progressMs) }} / {{ formatTime(durationMs) }}
             </span>
-            <FontAwesomeIcon :icon="faPause"/>
+            <FontAwesomeIcon :icon="isPlaying ? faPause : faPlay"/>
         </div>
 
-        <div id="bottom" class="hand">
-            <InsertCard :index="1"/>
-            <BigCard :year="2022" artist="Artist" track="Track"/>
-            <InsertCard :index="2"/>
-            <BigCard :year="2023" artist="Artist" track="Track"/>
-            <InsertCard :index="3"/>
-            <BigCard :year="2024" artist="Artist" track="Track"/>
-            <InsertCard :index="4"/>
-        </div>
+        <template v-for="(player, playerIndex) in players">
+            <div :id="player.position" class="hand">
+                <template v-if="playerIndex === currentPlayer" v-for="(card, cardIndex) in player.cards">
+                    <InsertCard :index="cardIndex+1" v-if="cardIndex === 0" @click="guess(0)"/>
 
-        <div id="left" class="hand">
-            <SmallCard :year="2016"/>
-            <SmallCard :year="2017"/>
-            <SmallCard :year="2018"/>
-        </div>
+                    <BigCard :year="getAlbumYear(card)"
+                             :artist="getArtistNames(card)"
+                             :track="card.name"/>
 
-        <div id="top" class="hand">
-            <SmallCard :year="2019"/>
-            <SmallCard :year="2020"/>
-            <SmallCard :year="2021"/>
-        </div>
+                    <InsertCard :index="cardIndex+2" @click="guess(cardIndex+1)"/>
+                </template>
 
-        <div id="right" class="hand">
-            <SmallCard :year="2013"/>
-            <SmallCard :year="2014"/>
-            <SmallCard :year="2015"/>
-        </div>
-
+                <template v-else v-for="card in player.cards">
+                    <SmallCard :year="getAlbumYear(card)"/>
+                </template>
+            </div>
+        </template>
     </div>
 </template>
 
