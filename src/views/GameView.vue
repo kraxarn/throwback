@@ -11,7 +11,7 @@ import {supabase} from "@/supabaseClient";
 import {GameApi} from "@/supabase/GameApi";
 import {useRoute} from "vue-router";
 import type {Player} from "@/game/Player";
-import {getPosition} from "@/game/Position";
+import {getPosition, type Position} from "@/game/Position";
 
 const api = new GameApi()
 let spotify: SpotifyApi
@@ -23,6 +23,7 @@ let playlist: Playlist
 const players = ref<Player[]>([])
 const currentPlayer = ref<number>(0)
 const currentTrackIndex = ref<number>()
+const currentPosition = ref<Position>("bottom")
 
 const progressMs = ref<number>(0)
 const durationMs = ref<number>(0)
@@ -153,6 +154,8 @@ const guess = async (index: number) => {
 	}
 
 	currentPlayer.value = (currentPlayer.value + 1) % players.value.length
+    currentPosition.value = getPosition(players.value.length, currentPlayer.value)
+
 	await play()
 }
 
@@ -160,8 +163,8 @@ const guess = async (index: number) => {
 
 <template>
     <div id="container">
-        <div id="indicator"></div>
-        <div id="dashboard">
+        <div id="indicator" :class="currentPosition"></div>
+        <div id="dashboard" :class="currentPosition">
             <span>
                 {{ formatTime(progressMs) }} / {{ formatTime(durationMs) }}
             </span>
@@ -211,7 +214,6 @@ const guess = async (index: number) => {
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
     z-index: 10;
 
     display: flex;
@@ -227,6 +229,22 @@ const guess = async (index: number) => {
     svg {
         font-size: 3em;
     }
+
+    &.bottom {
+        transform: translate(-50%, -50%);
+    }
+
+    &.top {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
+
+    &.left {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    &.right {
+        transform: translate(-50%, -50%) rotate(270deg);
+    }
 }
 
 #indicator {
@@ -236,8 +254,23 @@ const guess = async (index: number) => {
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(270deg);
     background: linear-gradient(to right, var(--color-blue-light) 50%, transparent 50%);
+
+    &.bottom {
+        transform: translate(-50%, -50%) rotate(270deg);
+    }
+
+    &.top {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    &.left {
+        transform: translate(-50%, -50%);
+    }
+
+    &.right {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
 }
 
 .hand {
