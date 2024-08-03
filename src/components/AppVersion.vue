@@ -1,8 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {name, version} from "@/../package.json"
+
+const appName: string = name
+const appVersion: string = version
+</script>
 
 <template>
     <span id="app-version">
-        {{ name }} v{{ version }}
+        {{ appName }} v{{ appVersion }}
     </span>
 </template>
 
