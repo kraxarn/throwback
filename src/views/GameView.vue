@@ -249,7 +249,7 @@ const guess = async (index: number) => {
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    column-gap: 2rem;
+    column-gap: 0.5rem;
 }
 
 #top, #bottom {
