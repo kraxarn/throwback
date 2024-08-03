@@ -4,7 +4,7 @@ import SmallCard from "@/components/SmallCard.vue";
 import BigCard from "@/components/BigCard.vue";
 import InsertCard from "@/components/InsertCard.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {faMedal, faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
 import {onMounted, ref} from "vue";
 import {type Playlist, SpotifyApi, type Track} from "@/spotify/SpotifyApi";
 import {supabase} from "@/supabaseClient";
@@ -224,9 +224,15 @@ const onPlayPause = async () => {
 
                     <InsertCard :index="cardIndex+2" v-if="!isGuessing" @click="guess(cardIndex+1)"/>
                 </template>
-
-                <template v-else v-for="card in player.cards">
-                    <SmallCard :year="getAlbumYear(card)"/>
+                <template v-else>
+                    <div class="card-count">
+                        <span>
+                            {{ player.cards.length }}
+                            {{ player.cards.length === 1 ? "card" : "cards" }}
+                        </span>
+                        <FontAwesomeIcon :icon="faMedal" v-if="player.cards.length >= 10"/>
+                    </div>
+                    <SmallCard v-for="card in player.cards" :year="getAlbumYear(card)"/>
                 </template>
             </div>
         </template>
@@ -325,6 +331,21 @@ const onPlayPause = async () => {
     align-items: center;
     justify-content: center;
     column-gap: 0.5rem;
+}
+
+.card-count {
+    position: absolute;
+    top: -1.5rem;
+    font-weight: lighter;
+
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+    align-items: center;
+
+    svg {
+        height: 2em;
+    }
 }
 
 #top, #bottom {
