@@ -117,7 +117,8 @@ const refresh = async () => {
 const play = async () => {
 	const contextUri = `spotify:playlist:${playlist.id}`
 	const offset = await nextCardIndex()
-	await spotify.play(contextUri, offset)
+	const track = await spotify.playlistTrack(playlist, offset)
+	await spotify.play(contextUri, `spotify:track:${track.id}`)
 	currentTrackIndex.value = offset
 }
 
