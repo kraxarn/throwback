@@ -66,6 +66,13 @@ export class SpotifyApi {
 		return this.request<T>("GET", fullPath)
 	}
 
+	private put(path: string, params?: URLSearchParams, body?: object): Promise<void> {
+		const fullPath = params ? `${path}?${params.toString()}` : path
+		return this.request<void>("PUT", fullPath, {
+			body: JSON.stringify(body),
+		})
+	}
+
 	private async refresh(): Promise<void> {
 		const body = new URLSearchParams()
 		body.set("grant_type", "refresh_token")
@@ -134,6 +141,29 @@ export class SpotifyApi {
 			}
 		}
 	}
+
+	public async playlistTrack(playlist: Playlist, index: number): Promise<Track> {
+		const params = new URLSearchParams()
+		params.set("limit", "1")
+		params.set("offset", index.toString())
+
+		const url = `playlists/${playlist.id}/tracks`
+		const page = await this.get<Page<PlaylistTrack>>(url, params)
+		return page.items[0].track
+	}
+
+	public async playbackState(): Promise<PlaybackState> {
+		return this.get<PlaybackState>("me/player");
+	}
+
+	public async play(context_uri: string, offset: number): Promise<void> {
+		await this.put("me/player/play", undefined, {
+			context_uri,
+			offset: {
+				position: offset,
+			},
+		})
+	}
 }
 
 interface RequestOptions {
@@ -196,4 +226,10 @@ interface SearchResults {
 
 interface FeaturedPlaylists {
 	playlists: Page<Playlist>;
+}
+
+interface PlaybackState {
+	progress_ms: number
+	is_playing: boolean
+	item: Track
 }
