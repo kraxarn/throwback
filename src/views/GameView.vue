@@ -4,7 +4,7 @@ import SmallCard from "@/components/SmallCard.vue";
 import BigCard from "@/components/BigCard.vue";
 import InsertCard from "@/components/InsertCard.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faMedal, faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {faMedal, faPause, faPlay, faRefresh} from "@fortawesome/free-solid-svg-icons";
 import {onMounted, ref} from "vue";
 import {type Playlist, SpotifyApi, type Track} from "@/spotify/SpotifyApi";
 import {supabase} from "@/supabaseClient";
@@ -237,6 +237,10 @@ const onPlayPause = async () => {
             </div>
         </template>
     </div>
+    <!-- Temporary workaround for buggy playlist API -->
+    <div id="try-again" @click="play">
+        <FontAwesomeIcon :icon="faRefresh"/>
+    </div>
 </template>
 
 <style scoped>
@@ -318,6 +322,19 @@ const onPlayPause = async () => {
 
     &.right {
         transform: translate(-50%, -50%) rotate(180deg);
+    }
+}
+
+#try-again {
+    position: fixed;
+    z-index: 20;
+    bottom: 0;
+    right: 0;
+    opacity: 0.25;
+
+    svg {
+        font-size: 2em;
+        margin: 1rem;
     }
 }
 
