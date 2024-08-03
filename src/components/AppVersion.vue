@@ -17,7 +17,7 @@ const appVersion: string = version
     position: fixed;
     bottom: 0;
     left: 0;
-    font-size: 2em;
+    font-size: 1.5em;
     padding: 1rem;
     opacity: 0.5;
 }
