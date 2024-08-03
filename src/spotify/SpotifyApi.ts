@@ -156,12 +156,12 @@ export class SpotifyApi {
 		return this.get<PlaybackState>("me/player");
 	}
 
-	public async play(context_uri: string, offset: number): Promise<void> {
+	public async play(context_uri: string, offset: number | string): Promise<void> {
 		await this.put("me/player/play", undefined, {
 			context_uri,
-			offset: {
-				position: offset,
-			},
+			offset: typeof offset === "number"
+				? {position: offset}
+				: {uri: offset},
 		})
 	}
 }
