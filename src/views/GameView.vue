@@ -153,8 +153,14 @@ const guess = async (index: number) => {
 		})
 	}
 
+	await api.insertRound(matchId,
+		currentPlayer.value,
+		currentTrackIndex.value,
+		correct
+	)
+
 	currentPlayer.value = (currentPlayer.value + 1) % players.value.length
-    currentPosition.value = getPosition(players.value.length, currentPlayer.value)
+	currentPosition.value = getPosition(players.value.length, currentPlayer.value)
 
 	await play()
 }

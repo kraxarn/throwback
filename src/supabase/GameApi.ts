@@ -52,4 +52,16 @@ export class GameApi {
 		this.parse(response)
 		return !!response.count && response.count > 0
 	}
+
+	public async insertRound(matchId: string, userIndex: number,
+							 trackIndex: number, success: boolean): Promise<void> {
+		await supabase
+			.from("rounds")
+			.insert({
+				match_id: matchId,
+				user_index: userIndex,
+				track_index: trackIndex,
+				success: success,
+			})
+	}
 }
