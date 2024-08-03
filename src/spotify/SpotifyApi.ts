@@ -164,6 +164,14 @@ export class SpotifyApi {
 				: {uri: offset},
 		})
 	}
+
+	public resume(): Promise<void> {
+		return this.put("me/player/play")
+	}
+
+	public pause(): Promise<void> {
+		return this.put("me/player/pause")
+	}
 }
 
 interface RequestOptions {

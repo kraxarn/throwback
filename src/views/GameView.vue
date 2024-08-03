@@ -192,6 +192,15 @@ const onRoundInsert = async (payload: RealtimePostgresInsertPayload<Round>) => {
 	isGuessing.value = false
 }
 
+const onPlayPause = async () => {
+	if (isPlaying.value) {
+		await spotify.pause()
+	} else {
+		await spotify.resume()
+	}
+	isPlaying.value = !isPlaying.value
+}
+
 </script>
 
 <template>
@@ -201,7 +210,7 @@ const onRoundInsert = async (payload: RealtimePostgresInsertPayload<Round>) => {
             <span>
                 {{ formatTime(progressMs) }} / {{ formatTime(durationMs) }}
             </span>
-            <FontAwesomeIcon :icon="isPlaying ? faPause : faPlay"/>
+            <FontAwesomeIcon :icon="isPlaying ? faPause : faPlay" @click="onPlayPause"/>
         </div>
 
         <template v-for="(player, playerIndex) in players">
