@@ -42,15 +42,21 @@ export class SpotifyApi {
 			return this.request<T>(method, path, options)
 		}
 
-		const json = await response.json()
+		let json: any
+		try {
+			json = await response.json()
+		} catch (e) {
+			return <T>undefined
+		}
+
 		if (response.ok) {
-			return <T>json;
+			return <T>json
 		}
 
 		const error: {
 			status: number;
 			message: string;
-		} = json.error;
+		} = json.error
 
 		throw `Error ${error.status}: ${error.message}`
 	}
