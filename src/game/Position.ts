@@ -8,5 +8,5 @@ const positions: Position[][] = [
 ]
 
 export const getPosition = (length: number, index: number): Position => {
-	return positions[length][index]
+	return positions[length - 1][index]
 }
