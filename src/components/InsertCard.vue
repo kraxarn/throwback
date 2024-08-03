@@ -10,7 +10,7 @@ const props = defineProps<{
 const iconStyle = {
 	"--fa-bounce-height": "-20px",
 	"--fa-animation-delay": `${props.index * 100}ms`,
-    "--fa-animation-duration": "1500ms",
+	"--fa-animation-duration": "1500ms",
 }
 
 </script>
