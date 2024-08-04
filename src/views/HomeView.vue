@@ -45,11 +45,25 @@ const signInSpotify = async () => {
             Sign in with Spotify
         </button>
 
+        <RouterLink id="privacy-policy" to="/privacy">
+            Privacy Policy
+        </RouterLink>
+
         <AppVersion/>
     </main>
 </template>
 
 <style scoped>
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#privacy-policy {
+    margin-top: 2rem;
+}
 
 button {
     display: flex;

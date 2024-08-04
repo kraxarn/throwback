@@ -4,6 +4,7 @@ import AuthView from "@/views/AuthView.vue";
 import PlaylistsView from "@/views/PlaylistsView.vue";
 import LobbyView from "@/views/LobbyView.vue";
 import GameView from "@/views/GameView.vue";
+import PrivacyView from "@/views/PrivacyView.vue";
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -32,7 +33,12 @@ const router = createRouter({
 			path: "/game/:id",
 			name: "game",
 			component: GameView,
-		}
+		},
+		{
+			path: "/privacy",
+			name: "privacy",
+			component: PrivacyView,
+		},
 	],
 })
 
