@@ -32,7 +32,7 @@ const iconStyle = {
 
     > div {
         position: absolute;
-        top: 0;
+        top: 40px;
         transform: translate(-50%, -100%);
 
         svg {
