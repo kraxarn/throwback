@@ -348,6 +348,7 @@ const onPlayPause = async () => {
     align-items: center;
     justify-content: center;
     column-gap: 0.5rem;
+    overflow-x: auto;
 }
 
 .card-count {

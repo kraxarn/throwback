@@ -37,6 +37,7 @@ defineProps<{
 
     overflow: hidden;
     width: 7rem;
+    min-width: 7em;
     height: 10rem;
     border-radius: 8px;
 
